@@ -13,7 +13,9 @@
 //
 //   - Entry, tranche 1: 50% of cash on the first tradable batch.
 //   - Entry, tranche 2: the remaining cash when the close is more than
-//     0.5% above the close 60 bars earlier, while still holding.
+//     0.5% above the close 60 bars earlier, while still holding — and only
+//     once that has held for two bars in a row, so a one-bar spike cannot
+//     trigger the full second tranche on noise.
 //   - Exit, whole position: the close falls 2% or more below the highest
 //     close since entry (trailing stop). The exit is level-triggered, so a
 //     sell the market refuses is retried on the next bar.
@@ -40,6 +42,8 @@ const closes: bigint[] = [];
 let firstSent = false;
 /** Whether the second tranche has been sent (and not rejected). */
 let secondSent = false;
+/** Consecutive bars the momentum condition has held (tranche 2 needs 2). */
+let confirmBars = 0;
 /** Highest close since the entry; 0n while flat. */
 let peakClose = 0n;
 /** Counter for unique sell client ids (a refused sell is retried). */
@@ -91,11 +95,16 @@ await runBars({
         return [{ side: 'sell', symbol, qty: held.qty, max_slippage_bps: MAX_SLIPPAGE_BPS, client_id: `x${sellNo}` } satisfies SellInput];
       }
       if (!secondSent && momentumUp()) {
-        secondSent = true;
-        const notional = state.cash;
-        if (notional >= BigInt(state.hello.fees.min_notional_quote_units)) {
-          return [{ side: 'buy', symbol, notional_quote_units: notional, max_slippage_bps: MAX_SLIPPAGE_BPS, client_id: 't2' } satisfies BuyInput];
+        confirmBars += 1;
+        if (confirmBars >= 2) {
+          secondSent = true;
+          const notional = state.cash;
+          if (notional >= BigInt(state.hello.fees.min_notional_quote_units)) {
+            return [{ side: 'buy', symbol, notional_quote_units: notional, max_slippage_bps: MAX_SLIPPAGE_BPS, client_id: 't2' } satisfies BuyInput];
+          }
         }
+      } else if (!secondSent) {
+        confirmBars = 0;
       }
       return [];
     }
