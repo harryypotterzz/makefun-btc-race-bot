@@ -1,7 +1,10 @@
 # Two-tranche trend rider — BTC race bot
 
-A long-only cbBTC/USDC bot for make.fun's "Race a BTC trading bot live for
-24 hours" (bars-replay/v1, 1-minute bars, $1,000 paper money).
+[![make.fun · btc-race-24h-20261123-0511](https://make.fun/badge/btc-race-24h-20261123-0511.svg)](https://make.fun/bounty/btc-race-24h-20261123-0511?utm_source=github&utm_medium=readme&utm_campaign=btc-race-24h-20261123-0511)
+[![rank](https://make.fun/badge/btc-race-24h-20261123-0511/harryypotterzz/makefun-btc-race-bot/rank.svg)](https://make.fun/bounty/btc-race-24h-20261123-0511/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=btc-race-24h-20261123-0511)
+[![reward](https://make.fun/badge/btc-race-24h-20261123-0511/harryypotterzz/makefun-btc-race-bot/reward.svg)](https://make.fun/bounty/btc-race-24h-20261123-0511?utm_source=github&utm_medium=readme&utm_campaign=btc-race-24h-20261123-0511)
+
+A long-only cbBTC/USDC bot for [make.fun's "Race a BTC trading bot live for 24 hours" bounty](https://make.fun/bounty/btc-race-24h-20261123-0511) (bars-replay/v1, 1-minute bars, $1,000 paper money).
 
 ## Strategy
 
